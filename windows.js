@@ -46,7 +46,13 @@ Windows.prototype.add = function add(win) {
   this.list.push(win)
 }
 
-Windows.prototype.onmousedown = function(id, ev) {
+Windows.prototype.remove = function (id) {
+  this.list = this.list.filter(function (win) {
+    return win.id !== id
+  })
+}
+
+Windows.prototype.ondrag = function(id, ev) {
   this.dragWindow = this.getWindow(id)
   this.dragWindow.offsetX = ev.offsetX
   this.dragWindow.offsetY = ev.offsetY
@@ -60,11 +66,12 @@ Windows.prototype.render = function render() {
       left: win.x + 'px'
     }
     var id = win.id
-    var onmousedown = this.onmousedown.bind(this, id)
+    var ondrag = this.ondrag.bind(this, id)
+    var close = this.remove.bind(this, id)
     return h('div.window', {style: style}, [
-      h('div.bar', {onmousedown: onmousedown},[
+      h('div.bar', {onmousedown: ondrag},[
         h('div.name', win.name),
-        h('div.close', '×')
+        h('div.close', {onclick: close}, '×')
       ]),
       h('div.body', win.body || defaultBody)
     ])
