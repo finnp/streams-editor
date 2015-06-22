@@ -9,7 +9,11 @@ module.exports = Windows
 
 function Windows() {
   this.list = []
-  this.defaultBody = h('textarea')
+
+  this.defaultBody = h('textarea', [
+    "var streams = require('streams')",
+    "return streams.Through({objectMode: true})"
+  ].join('\n'))
   
   this.tree = this.render()
   this.rootNode = createElement(this.tree)
@@ -41,15 +45,32 @@ Windows.prototype.patch = function () {
     this.tree = newTree
 }
 
-Windows.prototype.add = function add(win) {
-  win.id = uuid()
+Windows.prototype.add = function add(win, id) {
+  win.id = win.id || id || uuid()
   this.list.push(win)
+  return win.id
 }
 
 Windows.prototype.remove = function (id) {
   this.list = this.list.filter(function (win) {
     return win.id !== id
   })
+}
+
+Windows.prototype.hide = function (id) {
+  var win = this.getWindow(id)
+  win.hidden = true
+}
+
+Windows.prototype.show = function (id) {
+  var win = this.getWindow(id)
+  win.hidden = false
+}
+
+Windows.prototype.setPosition = function (id, pos) {
+  var win = this.getWindow(id)
+  win.x = pos.x
+  win.y = pos.y
 }
 
 Windows.prototype.ondrag = function(id, ev) {
@@ -60,21 +81,23 @@ Windows.prototype.ondrag = function(id, ev) {
 
 Windows.prototype.render = function render() {
   var defaultBody = this.defaultBody
-  var divWindows = this.list.map(function (win) {
-    var style = {
-      top: win.y + 'px',
-      left: win.x + 'px'
-    }
-    var id = win.id
-    var ondrag = this.ondrag.bind(this, id)
-    var close = this.remove.bind(this, id)
-    return h('div.window', {style: style}, [
-      h('div.bar', {onmousedown: ondrag},[
-        h('div.name', win.name),
-        h('div.close', {onclick: close}, '×')
-      ]),
-      h('div.body', win.body || defaultBody)
-    ])
-  }.bind(this))
+  var divWindows = this.list
+    .map(function (win) {
+      var style = {
+        top: win.y + 'px',
+        left: win.x + 'px',
+        visibility: (win.hidden ? 'hidden' : 'visible')
+      }
+      var id = win.id
+      var ondrag = this.ondrag.bind(this, id)
+      var close = this.hide.bind(this, id)
+      return h('div.window', {style: style, id: 'window-' + win.id}, [
+        h('div.bar', {onmousedown: ondrag},[
+          h('div.name', win.name),
+          h('div.close', {onclick: close}, '×')
+        ]),
+        h('div.body', win.body || defaultBody)
+      ])
+    }.bind(this))
   return h('div.windows', divWindows)
 }
