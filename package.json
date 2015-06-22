@@ -1,0 +1,20 @@
+{
+  "name": "streams-editor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "windows.js",
+  "scripts": {
+    "start": "wzrd index.js:bundle.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Finn Pauls",
+  "license": "MIT",
+  "dependencies": {
+    "delegate-dom": "0.0.1",
+    "flowgraph": "finnp/flowgraph",
+    "index-array": "^2.1.0",
+    "insert-css": "^0.2.0",
+    "uuid": "^2.0.1",
+    "virtual-dom": "^2.0.1"
+  }
+}
