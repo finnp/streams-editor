@@ -11,8 +11,9 @@ function Windows() {
   this.list = []
 
   this.defaultBody = h('textarea', [
-    "var streams = require('streams')",
-    "return streams.Through({objectMode: true})"
+    "var streams = require('stream')",
+    "var stream = streams.PassThrough({objectMode: true})",
+    "return stream"
   ].join('\n'))
   
   this.tree = this.render()

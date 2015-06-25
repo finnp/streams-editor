@@ -10,10 +10,14 @@
   "author": "Finn Pauls",
   "license": "MIT",
   "dependencies": {
+    "browser-module-sandbox": "^1.4.0",
+    "cat-names": "^1.0.2",
     "delegate-dom": "0.0.1",
     "flowgraph": "finnp/flowgraph",
     "index-array": "^2.1.0",
     "insert-css": "^0.2.0",
+    "ndjson": "^1.4.1",
+    "through2": "^2.0.0",
     "uuid": "^2.0.1",
     "virtual-dom": "^2.0.1"
   }
