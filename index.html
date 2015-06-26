@@ -3,24 +3,28 @@
   <head>
     <meta charset="utf-8">
     <title>streams-editor</title>
+    <link href="windows.css" rel="stylesheet" type="text/css" />
     <style>
     .buttons {
       position: absolute;
       top: 10px;
       left: 10px;
     }
+    svg .node text {
+      font-size: 12px !important;
+    }
     </style>
-    <link href="windows.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
     <div class="buttons">
+      <button id="start">Run</button>
       <form id="add-node">
         <input id="node-name" size="10" />
         <input type="submit" value="Add node"></input>
       </form>
-      <button id="start">Start</button>
       <ul id="templates"></ul>
     </div>
     <script src="bundle.js"></script>
+    <hr>
   </body>
 </html>

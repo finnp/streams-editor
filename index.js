@@ -44,21 +44,29 @@ function newNode(opts) {
     x: 200,
     y: 200
   }, opts)
-  var node = graph.addNode(options)
-  if(node) {
+  try {
+    var node = graph.addNode(options)
     windows.add({id: node.id, name: node.id, x: node.x + 100, y: node.y, body: node.body})
     windows.hide(node.id)
+  } catch(e) {
+    alert(e.message)
   }
-  else alert('ID already exists.')
+
 }
 
 // code for nodes (should go in own files)
 var outnode = h('textarea', [
 "var stream = require('stream-wrapper').defaults({objectMode:true})",
 "return stream.writable(function(chunk, enc, cb) {",
+"   if(chunk.length) chunk = chunk.toString()",
 "   parent.postMessage(chunk, '*')",
 "   cb()",
 "})"
+].join('\n'))
+
+var outtable = h('textarea', [
+"var htmltable = require('htmltable')",
+"return htmltable(document.body)"
 ].join('\n'))
 
 window.addEventListener('message', receiveMessage, false)
@@ -79,7 +87,8 @@ sandbox.on('bundleEnd', function () {
 })
 
 window.graph = new FlowGraph()
-graph.addNode({id:'out', body: outnode, outports: [], x: 300, y: 300})
+graph.addNode({id:'console', body: outnode, outports: [], x: 300, y: 300})
+graph.addNode({id:'table', body: outtable, outports: [], x: 100, y: 300})
 
 var view = new FlowGraphView(graph)
 document.body.appendChild(view.svg)
