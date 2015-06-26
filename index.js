@@ -3,6 +3,54 @@ var FlowGraphView = require('flowgraph').View
 var insertCss = require('insert-css')
 var Sandbox = require('browser-module-sandbox')
 var h = require('virtual-dom/h')
+var templates = require('./templates.json')
+var delegate = require('delegate-dom')
+var extend = require('xtend')
+
+
+var templatesElement = document.querySelector('#templates')
+var startButton = document.querySelector('#start')
+var addNodeForm = document.querySelector('#add-node')
+var nodeNameInput = document.querySelector('#node-name')
+
+Object.keys(templates).forEach(function (name) {
+  var li = document.createElement('li')
+  var button = document.createElement('button')
+  var text = document.createTextNode(name)
+  button.appendChild(text)
+  li.appendChild(button)
+  templatesElement.appendChild(li)
+})
+
+delegate.on(templatesElement, 'button', 'click', function (e) {
+  var label = e.target.innerText 
+  var body = h('textarea', templates[label])
+  newNode({id: label, body: body})
+})
+
+addNodeForm.addEventListener('submit', function (e) {
+  e.preventDefault()
+  newNode({id: nodeNameInput.value})
+})
+
+startButton.addEventListener('click', function () {
+  startButton.innerHTML = 'bundling...'
+  runCode()
+})
+
+function newNode(opts) {
+  opts = opts || {}
+  var options = extend({
+    x: 200,
+    y: 200
+  }, opts)
+  var node = graph.addNode(options)
+  if(node) {
+    windows.add({id: node.id, name: node.id, x: node.x + 100, y: node.y, body: node.body})
+    windows.hide(node.id)
+  }
+  else alert('ID already exists.')
+}
 
 // code for nodes (should go in own files)
 var outnode = h('textarea', [
@@ -18,11 +66,6 @@ window.addEventListener('message', receiveMessage, false)
 function receiveMessage(event) {
   console.log(event.data)
 }
-
-
-var startButton = document.querySelector('#start')
-var addNodeForm = document.querySelector('#add-node')
-var nodeNameInput = document.querySelector('#node-name')
 
 var sandbox = new Sandbox({
   name: 'streams-editor',
@@ -74,21 +117,3 @@ function runCode() {
   }).join('\n')
   sandbox.bundle(streams + '\n\n' + pipes)
 }
-
-addNodeForm.addEventListener('submit', function (e) {
-  e.preventDefault()
-  var options = {
-    id: nodeNameInput.value,
-    x: 200,
-    y: 200
-  }
-  var node = graph.addNode(options)
-  windows.add({id: node.id, name: node.id, x: node.x + 100, y: node.y, body: node.body})
-})
-
-startButton.addEventListener('click', function () {
-  startButton.innerHTML = 'bundling...'
-  runCode()
-})
-
-//https://github.com/maxogden/browser-module-sandbox

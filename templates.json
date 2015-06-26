@@ -1,0 +1,7 @@
+{
+  "request": "var request = require('hyperquest')\nreturn request('http://usgs-earthquakes.herokuapp.com/api/csv')",
+  "map": "var map = require('jsonmap')\nfunction fn(obj) {\nreturn obj\n}\nreturn map(fn, {parse: false})",
+  "csv-parse": "var csv = require('csv-parser')\n return csv()",
+  "ndjson-parse": "var ndjson = require('ndjson')\nreturn ndjson.parse()",
+  "ndjson-serialize": "var ndjson = require('ndjson')\nreturn ndjson.serialize()"
+}
