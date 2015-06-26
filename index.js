@@ -3,7 +3,6 @@ var FlowGraphView = require('flowgraph').View
 var insertCss = require('insert-css')
 var Sandbox = require('browser-module-sandbox')
 var h = require('virtual-dom/h')
-var catNames = require('cat-names')
 
 // code for nodes (should go in own files)
 var outnode = h('textarea', [
@@ -22,7 +21,8 @@ function receiveMessage(event) {
 
 
 var startButton = document.querySelector('#start')
-var addNodeButton = document.querySelector('#add-node')
+var addNodeForm = document.querySelector('#add-node')
+var nodeNameInput = document.querySelector('#node-name')
 
 var sandbox = new Sandbox({
   name: 'streams-editor',
@@ -75,9 +75,10 @@ function runCode() {
   sandbox.bundle(streams + '\n\n' + pipes)
 }
 
-addNodeButton.addEventListener('click', function () {
+addNodeForm.addEventListener('submit', function (e) {
+  e.preventDefault()
   var options = {
-    id: catNames.random().toLowerCase(),
+    id: nodeNameInput.value,
     x: 200,
     y: 200
   }

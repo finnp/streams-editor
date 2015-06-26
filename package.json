@@ -11,7 +11,6 @@
   "license": "MIT",
   "dependencies": {
     "browser-module-sandbox": "^1.4.0",
-    "cat-names": "^1.0.2",
     "delegate-dom": "0.0.1",
     "flowgraph": "finnp/flowgraph",
     "index-array": "^2.1.0",
