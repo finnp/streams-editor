@@ -50,6 +50,10 @@ graph.nodes.forEach(function (node) {
   windows.hide(node.id)
 })
 
+graph.on('node-deleted', function (node) {
+  windows.remove(node.id)
+})
+
 view.on('node-select', function (node) {
   windows.show(node.id)
   windows.setPosition(node.id, {x: node.x + 100, y: node.y})
