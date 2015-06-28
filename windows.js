@@ -98,7 +98,15 @@ Windows.prototype.render = function render() {
         form.push(h('div', {className: 'form-label'}, param.name))
         form.push(h('input', {dataset: {name: param.name}}))
       })
-      form.push(h('textarea', {style: {display: form.length > 0 ? 'none' : 'block'}} ,win.config.fn || defaultBody.fn))
+      var hiddenFunction = form.length > 0 && !win.showmore
+      if(hiddenFunction) {
+        form.push(h('button', {
+          onclick: function () {
+            win.showmore = true
+          }
+        }, 'show function'))
+      }
+      form.push(h('textarea', {style: {display: hiddenFunction ? 'none' : 'block'}} ,win.config.fn || defaultBody.fn))
       
       return h('div.window', {style: style, id: 'window-' + win.id}, [
         h('div.bar', {onmousedown: ondrag},[
