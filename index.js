@@ -45,12 +45,6 @@ startButton.addEventListener('click', function () {
   runCode()
 })
 
-window.addEventListener('message', receiveMessage, false)
-
-function receiveMessage(event) {
-  console.log(event.data)
-}
-
 var sandbox = new Sandbox({
   name: 'streams-editor',
   cdn: 'https://wzrd.in',
@@ -64,7 +58,7 @@ sandbox.on('bundleEnd', function () {
 
 window.graph = new FlowGraph()
 
-var view = new FlowGraphView(graph)
+window.view = new FlowGraphView(graph)
 document.body.appendChild(view.svg)
 
 var Windows = require('./windows')
@@ -88,6 +82,7 @@ insertCss(FlowGraph.css)
 
 function runCode() {
   var edges = graph.getEdges()
+  var nodeOutFn = "function nodeOut(id) {\nvar stream = require('stream-wrapper').defaults({objectMode:true})\nreturn stream.writable(function(chunk, enc, cb) {\nif(chunk.length) chunk = chunk.toString()\nparent.postMessage({type: 'nodeOut', id: id}, '*')\ncb()\n})\n}"
   var streams = graph.nodes.map(function (node) {
     // code
     var selectorCode = '#window-' + node.id + ' textarea'
@@ -101,11 +96,30 @@ function runCode() {
     
     var firstline = 'var ' + node.id + ' = ('
     var noEnd = '\n' + node.id + '.end = function noop() {}'
-    return [firstline, content, ')(' + JSON.stringify(opts) + ')', noEnd].join('\n')
+
+    var nodeProgram = [firstline, content, ')(' + JSON.stringify(opts) + ')', noEnd]
+    if(node.outports.length > 0) {
+      var nodeOut = node.id + '.pipe(nodeOut("' + node.id + '"))'
+      nodeProgram.push(nodeOut)
+    }
+    return nodeProgram.join('\n')
   }).join('\n')
   var pipes = edges.map(function (edge) {
     return edge.source.id + '.pipe(' + edge.target.id + ')'
   }).join('\n')
-  console.log(streams)
-  sandbox.bundle(streams + '\n\n' + pipes)
+  var bundle = [nodeOutFn, streams, pipes].join('\n\n')
+  console.log(bundle)
+  sandbox.bundle(bundle)
+}
+
+
+window.addEventListener('message', receiveMessage, false)
+
+function receiveMessage(e) {
+  console.log(e.data)
+  if(typeof e.data === 'object') {
+    if(e.data.type === 'nodeOut') {
+      view.blinkEdge(e.data.id)
+    }
+  }
 }
