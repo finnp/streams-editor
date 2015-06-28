@@ -1,7 +1,37 @@
 {
-  "request": "var request = require('hyperquest')\nreturn request('http://usgs-earthquakes.herokuapp.com/api/csv')",
-  "through": "var through = require('through2')\nreturn through.obj(function (chunk, enc, cb){\tthis.push(chunk)\ncb()\n})",
-  "csv_parse": "var csv = require('csv-parser')\n return csv()",
-  "ndjson_parse": "var ndjson = require('ndjson')\nreturn ndjson.parse()",
-  "ndjson_serialize": "var ndjson = require('ndjson')\nreturn ndjson.serialize()"
+  "request": {
+    "fn": "function(opts) {\nvar request = require('hyperquest')\nreturn request(opts.url)\n}",
+    "params": [
+      {"name": "url", "type": "string", "default": "http://usgs-earthquakes.herokuapp.com/api/csv"}
+    ],
+    "out": true
+  },
+  "through": {
+    "fn": "function() {\nvar through = require('through2')\nreturn through.obj(function (chunk, enc, cb){\tthis.push(chunk)\ncb()\n})\n}",
+    "in": true,
+    "out": true
+  },
+  "csv_parse": {
+    "fn": "function() {\nvar csv = require('csv-parser')\n return csv()\n}",
+    "in": true,
+    "out": true
+  },
+  "ndjson_parse": {
+    "fn": "function() {\nvar ndjson = require('ndjson')\nreturn ndjson.parse()\n}",
+    "in": true,
+    "out": true
+  },
+  "ndjson_serialize": {
+    "fn": "function() {\nvar ndjson = require('ndjson')\nreturn ndjson.serialize()\n}",
+    "in": true,
+    "out": true
+  },
+  "console_out": {
+    "fn": "function() {\nvar stream = require('stream-wrapper').defaults({objectMode:true})\nreturn stream.writable(function(chunk, enc, cb) {\nif(chunk.length) chunk = chunk.toString()\nparent.postMessage(chunk, '*')\ncb()\n})\n}",
+    "in": true
+  },
+  "table_out": {
+    "fn": "function() {\nvar htmltable = require('htmltable')\nreturn htmltable(document.body)\n}",
+    "in": true
+  }
 }

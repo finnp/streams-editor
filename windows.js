@@ -10,11 +10,11 @@ module.exports = Windows
 function Windows() {
   this.list = []
 
-  this.defaultBody = h('textarea', [
+  this.defaultConfig = {fn: [
     "var streams = require('stream')",
     "var stream = streams.PassThrough({objectMode: true})",
     "return stream"
-  ].join('\n'))
+  ].join('\n')}
   
   this.tree = this.render()
   this.rootNode = createElement(this.tree)
@@ -92,12 +92,20 @@ Windows.prototype.render = function render() {
       var id = win.id
       var ondrag = this.ondrag.bind(this, id)
       var close = this.hide.bind(this, id)
+      
+      var form = []
+      ;(win.config.params || []).forEach(function (param) {
+        form.push(h('div', {className: 'form-label'}, param.name))
+        form.push(h('input', {dataset: {name: param.name}}))
+      })
+      form.push(h('textarea', win.config.fn || defaultBody.fn))
+      
       return h('div.window', {style: style, id: 'window-' + win.id}, [
         h('div.bar', {onmousedown: ondrag},[
           h('div.name', win.name),
           h('div.close', {onclick: close}, '×')
         ]),
-        h('div.body', win.body || defaultBody)
+        h('div.body', form)
       ])
     }.bind(this))
   return h('div.windows', divWindows)

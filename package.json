@@ -12,6 +12,7 @@
   "dependencies": {
     "browser-module-sandbox": "^1.4.0",
     "delegate-dom": "0.0.1",
+    "dom-array": "0.0.2",
     "flowgraph": "finnp/flowgraph",
     "index-array": "^2.1.0",
     "insert-css": "^0.2.0",

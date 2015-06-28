@@ -2,10 +2,10 @@ var FlowGraph = require('flowgraph')
 var FlowGraphView = require('flowgraph').View
 var insertCss = require('insert-css')
 var Sandbox = require('browser-module-sandbox')
-var h = require('virtual-dom/h')
 var templates = require('./templates.json')
 var delegate = require('delegate-dom')
 var extend = require('xtend')
+var domArray = require('dom-array')
 
 
 var templatesElement = document.querySelector('#templates')
@@ -24,50 +24,26 @@ Object.keys(templates).forEach(function (name) {
 
 delegate.on(templatesElement, 'button', 'click', function (e) {
   var label = e.target.innerText 
-  var body = h('textarea', templates[label])
-  newNode({id: label, body: body})
-})
+  var config = templates[label]
+  var opts = {label: label, config: config}
+  if(!config.in) opts.inports = []
+  if(!config.out) opts.outports = []
 
-addNodeForm.addEventListener('submit', function (e) {
-  e.preventDefault()
-  newNode({id: nodeNameInput.value})
-})
-
-startButton.addEventListener('click', function () {
-  startButton.innerHTML = 'bundling...'
-  runCode()
-})
-
-function newNode(opts) {
-  opts = opts || {}
   var options = extend({
     x: 200,
     y: 200
   }, opts)
   try {
     var node = graph.addNode(options)
-    windows.add({id: node.id, name: node.id, x: node.x + 100, y: node.y, body: node.body})
-    windows.hide(node.id)
   } catch(e) {
     alert(e.message)
   }
+})
 
-}
-
-// code for nodes (should go in own files)
-var outnode = h('textarea', [
-"var stream = require('stream-wrapper').defaults({objectMode:true})",
-"return stream.writable(function(chunk, enc, cb) {",
-"   if(chunk.length) chunk = chunk.toString()",
-"   parent.postMessage(chunk, '*')",
-"   cb()",
-"})"
-].join('\n'))
-
-var outtable = h('textarea', [
-"var htmltable = require('htmltable')",
-"return htmltable(document.body)"
-].join('\n'))
+startButton.addEventListener('click', function () {
+  startButton.innerHTML = 'bundling...'
+  runCode()
+})
 
 window.addEventListener('message', receiveMessage, false)
 
@@ -87,8 +63,6 @@ sandbox.on('bundleEnd', function () {
 })
 
 window.graph = new FlowGraph()
-graph.addNode({id:'console', body: outnode, outports: [], x: 300, y: 300})
-graph.addNode({id:'table', body: outtable, outports: [], x: 100, y: 300})
 
 var view = new FlowGraphView(graph)
 document.body.appendChild(view.svg)
@@ -96,19 +70,18 @@ document.body.appendChild(view.svg)
 var Windows = require('./windows')
 var windows = new Windows()
 
-
-graph.nodes.forEach(function (node) {
-  windows.add({id: node.id, name: node.id, x: node.x, y: node.y, body: node.body})
-  windows.hide(node.id)
-})
-
 graph.on('node-deleted', function (node) {
   windows.remove(node.id)
 })
 
+graph.on('node-added', function (node) {
+  windows.add({id: node.id, name: node.id + '(' + node.label + ')', x: node.x + 100, y: node.y, config: node.config})
+  windows.hide(node.id)
+})
+
 view.on('node-select', function (node) {
   windows.show(node.id)
-  windows.setPosition(node.id, {x: node.x + 100, y: node.y})
+  windows.setPosition(node.id, {x: node.x + 108, y: node.y})
 })
 
 insertCss(FlowGraph.css)
@@ -116,13 +89,23 @@ insertCss(FlowGraph.css)
 function runCode() {
   var edges = graph.getEdges()
   var streams = graph.nodes.map(function (node) {
-    var firstline = 'var ' + node.id + ' = (function() {'
-    var selector = '#window-' + node.id + ' textarea'
-    var content = document.querySelector(selector).value
-    return [firstline, content, '})()'].join('\n')
+    // code
+    var selectorCode = '#window-' + node.id + ' textarea'
+    var content = document.querySelector(selectorCode).value
+    // opts
+    var selectorOpts = '#window-' + node.id + ' input'
+    var opts = {}
+    domArray(document.querySelectorAll(selectorOpts)).forEach(function (elem) {
+      opts[elem.dataset.name] = elem.value
+    })
+    
+    var firstline = 'var ' + node.id + ' = ('
+    var noEnd = '\n' + node.id + '.end = function noop() {}'
+    return [firstline, content, ')(' + JSON.stringify(opts) + ')', noEnd].join('\n')
   }).join('\n')
   var pipes = edges.map(function (edge) {
     return edge.source.id + '.pipe(' + edge.target.id + ')'
   }).join('\n')
+  console.log(streams)
   sandbox.bundle(streams + '\n\n' + pipes)
 }
