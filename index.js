@@ -116,7 +116,7 @@ function runCode() {
 window.addEventListener('message', receiveMessage, false)
 
 function receiveMessage(e) {
-  console.log(e.data)
+  if(typeof e.data === 'string') console.log(e.data)
   if(typeof e.data === 'object') {
     if(e.data.type === 'nodeOut') {
       view.blinkEdge(e.data.id)

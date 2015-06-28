@@ -2,7 +2,15 @@
   "request": {
     "fn": "function(opts) {\nvar request = require('hyperquest')\nreturn request(opts.url)\n}",
     "params": [
-      {"name": "url", "type": "string", "default": "http://usgs-earthquakes.herokuapp.com/api/csv"}
+      {"name": "url", "type": "string"}
+    ],
+    "out": true
+  },
+  "ticker": {
+    "fn": "function(opts) {\nvar stream = require('stream-wrapper').defaults({objectMode:true})\nvar started\nreturn stream.readable(function(size) {\n if(!started) setInterval(this.push.bind(this, opts.value), Number(opts.interval)) \nstarted = true\n})\n}",
+    "params": [
+      {"name": "value", "type": "string"},
+      {"name": "interval", "type": "number"}
     ],
     "out": true
   },
