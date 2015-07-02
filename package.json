@@ -5,6 +5,7 @@
   "main": "windows.js",
   "scripts": {
     "start": "wzrd index.js:bundle.js",
+    "deploy": "gh-pages-deploy",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Finn Pauls",
@@ -13,7 +14,8 @@
     "browser-module-sandbox": "^1.4.0",
     "delegate-dom": "0.0.1",
     "dom-array": "0.0.2",
-    "flowgraph": "finnp/flowgraph",
+    "flowgraph": "^1.0.0",
+    "flowgraph-editor": "^1.0.0",
     "index-array": "^2.1.0",
     "insert-css": "^0.2.0",
     "ndjson": "^1.4.1",
@@ -21,5 +23,8 @@
     "uuid": "^2.0.1",
     "virtual-dom": "^2.0.1",
     "xtend": "^4.0.0"
+  },
+  "devDependencies": {
+    "gh-pages-deploy": "^0.3.0"
   }
 }

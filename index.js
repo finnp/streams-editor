@@ -1,5 +1,6 @@
 var FlowGraph = require('flowgraph')
-var FlowGraphView = require('flowgraph').View
+var FlowGraphView = require('flowgraph-editor')
+
 var insertCss = require('insert-css')
 var Sandbox = require('browser-module-sandbox')
 var templates = require('./templates.json')
@@ -78,7 +79,7 @@ view.on('node-select', function (node) {
   windows.setPosition(node.id, {x: node.x + 108, y: node.y})
 })
 
-insertCss(FlowGraph.css)
+insertCss(FlowGraphView.css)
 
 function runCode() {
   var edges = graph.getEdges()
