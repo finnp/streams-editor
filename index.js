@@ -3,16 +3,14 @@ var FlowGraphView = require('flowgraph-editor')
 
 var insertCss = require('insert-css')
 var Sandbox = require('browser-module-sandbox')
-var templates = require('./templates.json')
 var delegate = require('delegate-dom')
 var extend = require('xtend')
 var domArray = require('dom-array')
 
+var templates = require('./templates.json')
 
 var templatesElement = document.querySelector('#templates')
 var startButton = document.querySelector('#start')
-var addNodeForm = document.querySelector('#add-node')
-var nodeNameInput = document.querySelector('#node-name')
 
 Object.keys(templates).forEach(function (name) {
   var li = document.createElement('li')
@@ -21,29 +19,6 @@ Object.keys(templates).forEach(function (name) {
   button.appendChild(text)
   li.appendChild(button)
   templatesElement.appendChild(li)
-})
-
-delegate.on(templatesElement, 'button', 'click', function (e) {
-  var label = e.target.innerText 
-  var config = templates[label]
-  var opts = {label: label, config: config}
-  if(!config.in) opts.inports = []
-  if(!config.out) opts.outports = []
-
-  var options = extend({
-    x: 200,
-    y: 200
-  }, opts)
-  try {
-    var node = graph.addNode(options)
-  } catch(e) {
-    alert(e.message)
-  }
-})
-
-startButton.addEventListener('click', function () {
-  startButton.innerHTML = 'bundling...'
-  runCode()
 })
 
 var sandbox = new Sandbox({
@@ -57,9 +32,9 @@ sandbox.on('bundleEnd', function () {
   console.log('Bundled.')
 })
 
-window.graph = new FlowGraph()
+var graph = new FlowGraph()
 
-window.view = new FlowGraphView(graph)
+var view = new FlowGraphView(graph)
 document.body.appendChild(view.svg)
 
 var Windows = require('./windows')
@@ -81,7 +56,7 @@ view.on('node-select', function (node) {
 
 insertCss(FlowGraphView.css)
 
-function runCode() {
+function runCode () {
   var edges = graph.getEdges()
   var nodeOutFn = "function nodeOut(id) {\nvar stream = require('stream-wrapper').defaults({objectMode:true})\nreturn stream.writable(function(chunk, enc, cb) {\nif(chunk.length) chunk = chunk.toString()\nparent.postMessage({type: 'nodeOut', id: id}, '*')\ncb()\n})\n}"
   var streams = graph.nodes.map(function (node) {
@@ -94,12 +69,12 @@ function runCode() {
     domArray(document.querySelectorAll(selectorOpts)).forEach(function (elem) {
       opts[elem.dataset.name] = elem.value
     })
-    
+
     var firstline = 'var ' + node.id + ' = ('
     var noEnd = '\n' + node.id + '.end = function noop() {}'
 
     var nodeProgram = [firstline, content, ')(' + JSON.stringify(opts) + ')', noEnd]
-    if(node.outports.length > 0) {
+    if (node.outports.length > 0) {
       var nodeOut = node.id + '.pipe(nodeOut("' + node.id + '"))'
       nodeProgram.push(nodeOut)
     }
@@ -113,14 +88,36 @@ function runCode() {
   sandbox.bundle(bundle)
 }
 
-
 window.addEventListener('message', receiveMessage, false)
 
-function receiveMessage(e) {
-  if(typeof e.data === 'string') console.log(e.data)
-  if(typeof e.data === 'object') {
-    if(e.data.type === 'nodeOut') {
+function receiveMessage (e) {
+  if (typeof e.data === 'string') console.log(e.data)
+  if (typeof e.data === 'object') {
+    if (e.data.type === 'nodeOut') {
       view.blinkEdge(e.data.id)
     }
   }
 }
+
+delegate.on(templatesElement, 'button', 'click', function (e) {
+  var label = e.target.innerText
+  var config = templates[label]
+  var opts = {label: label, config: config}
+  if (!config.in) opts.inports = []
+  if (!config.out) opts.outports = []
+
+  var options = extend({
+    x: 200,
+    y: 200
+  }, opts)
+  try {
+    graph.addNode(options)
+  } catch(e) {
+    console.error(e.message)
+  }
+})
+
+startButton.addEventListener('click', function () {
+  startButton.innerHTML = 'bundling...'
+  runCode()
+})

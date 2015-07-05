@@ -4,9 +4,9 @@
   "description": "",
   "main": "windows.js",
   "scripts": {
-    "start": "wzrd index.js:bundle.js",
-    "deploy": "gh-pages-deploy",
     "bundle": "browserify index.js > bundle.js",
+    "deploy": "gh-pages-deploy",
+    "start": "node compile-templates.js && wzrd index.js:bundle.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Finn Pauls",
@@ -26,13 +26,13 @@
     "xtend": "^4.0.0"
   },
   "devDependencies": {
-    "gh-pages-deploy": "^0.3.0",
-    "browserify": "^10.2.4"
+    "browserify": "^10.2.4",
+    "gh-pages-deploy": "^0.3.0"
   },
   "gh-pages-deploy": {
+    "noprompt": true,
     "prep": [
       "bundle"
-    ],
-    "noprompt": true
+    ]
   }
 }

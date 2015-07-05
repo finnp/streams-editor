@@ -1,45 +1,54 @@
 {
-  "request": {
-    "fn": "function(opts) {\nvar request = require('hyperquest')\nreturn request(opts.url)\n}",
-    "params": [
-      {"name": "url", "type": "string"}
-    ],
-    "out": true
-  },
-  "ticker": {
-    "fn": "function(opts) {\nvar stream = require('stream-wrapper').defaults({objectMode:true})\nvar started\nreturn stream.readable(function(size) {\n if(!started) setInterval(this.push.bind(this, opts.value), Number(opts.interval)) \nstarted = true\n})\n}",
-    "params": [
-      {"name": "value", "type": "string"},
-      {"name": "interval", "type": "number"}
-    ],
-    "out": true
-  },
-  "through": {
-    "fn": "function() {\nvar through = require('through2')\nreturn through.obj(function (chunk, enc, cb){\tthis.push(chunk)\ncb()\n})\n}",
-    "in": true,
-    "out": true
-  },
-  "csv_parse": {
-    "fn": "function() {\nvar csv = require('csv-parser')\n return csv()\n}",
-    "in": true,
-    "out": true
-  },
-  "ndjson_parse": {
-    "fn": "function() {\nvar ndjson = require('ndjson')\nreturn ndjson.parse()\n}",
-    "in": true,
-    "out": true
-  },
-  "ndjson_serialize": {
-    "fn": "function() {\nvar ndjson = require('ndjson')\nreturn ndjson.serialize()\n}",
-    "in": true,
-    "out": true
-  },
-  "console_out": {
-    "fn": "function() {\nvar stream = require('stream-wrapper').defaults({objectMode:true})\nreturn stream.writable(function(chunk, enc, cb) {\nif(chunk.length) chunk = chunk.toString()\nparent.postMessage(chunk, '*')\ncb()\n})\n}",
-    "in": true
-  },
-  "table_out": {
-    "fn": "function() {\nvar htmltable = require('htmltable')\nreturn htmltable(document.body)\n}",
-    "in": true
-  }
+ "console_out": {
+  "fn": "function () {\n  var stream = require('stream-wrapper').defaults({objectMode: true})\n  return stream.writable(function (chunk, enc, cb) {\n    if (chunk.length) chunk = chunk.toString()\n    window.parent.postMessage(chunk, '*')\n    cb()\n  })\n}",
+  "in": true
+ },
+ "csv_parse": {
+  "fn": "function () {\n  var csv = require('csv-parser')\n  return csv()\n}",
+  "in": true,
+  "out": true
+ },
+ "ndjson_parse": {
+  "fn": "function () {\n  var ndjson = require('ndjson')\n  return ndjson.parse()\n}",
+  "in": true,
+  "out": true
+ },
+ "ndjson_serialize": {
+  "fn": "function () {\n  var ndjson = require('ndjson')\n  return ndjson.serialize()\n}",
+  "in": true,
+  "out": true
+ },
+ "request": {
+  "fn": "function (opts) {\n  var request = require('hyperquest')\n  return request(opts.url)\n}",
+  "params": [
+   {
+    "name": "url",
+    "type": "string"
+   }
+  ],
+  "out": true
+ },
+ "table_out": {
+  "fn": "function () {\n  var htmltable = require('htmltable')\n  return htmltable(document.body)\n}",
+  "in": true
+ },
+ "through": {
+  "fn": "function () {\n  var through = require('through2')\n  return through.obj(function (chunk, enc, cb) {\n    this.push(chunk)\n    cb()\n  })\n}",
+  "in": true,
+  "out": true
+ },
+ "ticker": {
+  "fn": "function (opts) {\n  var stream = require('stream-wrapper').defaults({objectMode: true})\n  var started\n  return stream.readable(function (size) {\n    if (!started) setInterval(this.push.bind(this, opts.value), Number(opts.interval))\n    started = true\n  })\n}",
+  "params": [
+   {
+    "name": "value",
+    "type": "string"
+   },
+   {
+    "name": "interval",
+    "type": "number"
+   }
+  ],
+  "out": true
+ }
 }
