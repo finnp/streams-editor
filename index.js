@@ -25,7 +25,7 @@ Object.keys(templates).forEach(function (name) {
 var sandbox = new Sandbox({
   name: 'streams-editor',
   cdn: 'https://wzrdwzrd.herokuapp.com',
-  container: document.body
+  container: document.querySelector('footer')
 })
 
 sandbox.on('bundleEnd', function () {
