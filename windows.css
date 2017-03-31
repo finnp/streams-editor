@@ -4,27 +4,26 @@
   top: 0;
 }
 .window {
-  font-family: helvetica, arial, sans-serif;
+  font-family: "Open Sans", Helvetica, Arial, sans-serif;
   position: absolute;
-  border: 2px solid black;
+  border: 2px solid #293648;
   background-color: white;
-  border-radius: 5px 5px 0px 0px;
+  border-radius: 5px 5px 0 0;
   display: block;
-  box-shadow: 4px 4px 4px #ccc;
+  box-shadow: 0 40 12px rgba(0, 0, 0, .1);
 }
 
 .window .bar {
   min-width: 200px;
   line-height: 22px;
-  font-size: 14px;
-  border-radius: 5px 5px 0px 0px;
-  border: 2px solid black;
-  color: black;
-  background: #eee;
+  font-size: 12px;
+  border-radius: 5px 5px 0 0;
+  border-bottom: 2px solid #293648;
+  color: #293648;
+  background-color: #F6F7F8;
   cursor: -webkit-grab;
   overflow : hidden;
   border-width: 2px;
-  margin: -2px -2px 0px -2px;
 }
 
 .window .body {
@@ -32,37 +31,53 @@
 }
 
 .window textarea {
+  font-family: monospace;
   width: 300px;
   height: 200px;
-  padding: 5px;
+  padding: 10px;
   outline: none;
+  border: none;
+}
+
+.window textarea:focus,
+.window textarea:active {
+  color: #003E83;
 }
 
 .window input {
   display: block;
-  width: 100%;
-  padding: 0 0 0 0;
-  border: 0px;
+  width: calc(100% - 10px);
+  margin: 5px 5px 15px 5px;
+  padding: 3px 0;
+  border: 0;
   line-height: 2;
-  margin-bottom: 5px;
-  border-bottom: 1px solid #ccc;
+  font-size: 14px;
+  border-bottom: 1px solid #E9EBEC;
   outline: none;
+}
+
+.window button {
+  margin-bottom: 10px;
 }
 
 .window .close {
   float: right;
   display: inline-block;
-  padding-top: 2px;
-  padding-right: 9px;
+  padding: 4px 10px;
   cursor: pointer;
 }
 
 .window .name {
   float: left;
   display: inline-block;
-  padding: 3px;
+  padding: 4px 10px;
 }
 
 .window .form-label {
   margin: 5px;
+  text-align: left;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: #7C8792;
 }

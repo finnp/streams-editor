@@ -5,46 +5,117 @@
     <title>streams-editor</title>
     <link href="windows.css" rel="stylesheet" type="text/css" />
     <style>
+    html {
+      box-sizing: border-box;
+    }
+    *, *:before, *:after {
+      box-sizing: inherit;
+    }
+    html, body, div, span, applet, object, iframe,
+    h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+    a, abbr, acronym, address, big, cite, code,
+    del, dfn, em, img, ins, kbd, q, s, samp,
+    small, strike, strong, sub, sup, tt, var,
+    b, u, i, center,
+    dl, dt, dd, ol, ul, li,
+    fieldset, form, label, legend,
+    table, caption, tbody, tfoot, thead, tr, th, td,
+    article, aside, canvas, details, embed,
+    figure, figcaption, footer, header, hgroup,
+    menu, nav, output, ruby, section, summary,
+    time, mark, audio, video {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      font-size: 100%;
+      font: inherit;
+      vertical-align: baseline;
+    }
+    body {
+      font-family: "Open Sans", Helvetica, Arial, sans-serif;
+      border-color: #293648;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    .topbar {
+      background-color: #293648;
+      color: #FFF;
+      padding: 10px;
+    }
+    h1 {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    h1 a {
+      text-transform: none;
+      letter-spacing: 0;
+      color: #FFF;
+      font-size: 10px;
+    }
+    .main {
+      overflow: hidden;
+      height: calc(100vh - 30px)
+    }
     button {
-      background-color: #eee;
-      border-color: black;
-      padding: 5px;
-      box-shadow: 2px 2px 2px #ccc;
+      background-color: #F6F7F8;
+      border-color: #293648;
+      padding: 7px 9px;
+      box-shadow: 2px 2px 2px #E9EBEC;
       border-radius: 4px;
       outline: none;
       border-width: 2px;
+      cursor: pointer;
     }
     ul {
       list-style: none;
       padding-left: 0;
     }
     ul li {
-      margin-bottom: 2px;
+      margin-bottom: 5px;
+    }
+    #templates {
+      margin-top: 40px;
     }
     button:active {
       margin-left: 2px;
       margin-top: 2px;
       margin-right: -2px;
       margin-bottom: -2px;
-      box-shadow: 0px 0px grey;
+      box-shadow: 0 0 #E9EBEC;
     }
     .buttons {
       position: absolute;
       top: 10px;
       left: 10px;
     }
-    
+
     button#start {
-      background-color: #8ADB6F;
+      background-color: #2ACA4B;
+      color: white;
+      border: none;
+      box-shadow: none;
+      position: fixed;
+      top: 5px;
+      right: 10px;
     }
-    
+    button#start:hover,
+    button#start:focus {
+      background-color: #199E33;
+      color: white;
+    }
+
     svg .node text {
       font-size: 12px !important;
     }
-    
+
     svg .node .body {
-      fill: rgba(180,180,180,0.5) !important;
+      fill: rgba(0,127,255,.075) !important;
       stroke-width: 2px !important;
+    }
+    svg .node:hover .body {
+      fill: rgba(0,127,255,.2) !important;
     }
     svg .node circle {
       stroke-width: 2px !important;
@@ -52,15 +123,19 @@
     </style>
   </head>
   <body>
-    <div class="buttons">
-      <button id="start">▶︎ Run</button>
-      <!-- <form id="add-node">
-        <input id="node-name" size="10" />
-        <input type="submit" value="Add node"></input>
-      </form> -->
-      <ul id="templates"></ul>
-    </div>
+    <header class="topbar">
+      <h1>Data Streams Editor <a href="https://github.com/finnp/streams-editor">source</a></h1>
+    </header>
+    <main>
+      <div class="buttons">
+        <button id="start">▶︎ Run</button>
+        <!-- <form id="add-node">
+          <input id="node-name" size="10" />
+          <input type="submit" value="Add node"></input>
+        </form> -->
+        <ul id="templates"></ul>
+      </div>
+    </main>
     <script src="bundle.js"></script>
-    <hr>
   </body>
 </html>
