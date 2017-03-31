@@ -19,6 +19,7 @@ Object.keys(templates).forEach(function (name) {
   button.appendChild(text)
   li.appendChild(button)
   templatesElement.appendChild(li)
+  button.setAttribute('class', 'btn-add')
 })
 
 var sandbox = new Sandbox({
@@ -118,6 +119,6 @@ delegate.on(templatesElement, 'button', 'click', function (e) {
 })
 
 startButton.addEventListener('click', function () {
-  startButton.innerHTML = 'bundling...'
+  startButton.innerHTML = 'bundling…'
   runCode()
 })
