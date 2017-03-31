@@ -27,7 +27,8 @@
   },
   "devDependencies": {
     "browserify": "^10.2.4",
-    "gh-pages-deploy": "^0.3.0"
+    "gh-pages-deploy": "^0.3.0",
+    "wzrd": "^1.5.0"
   },
   "gh-pages-deploy": {
     "noprompt": true,
