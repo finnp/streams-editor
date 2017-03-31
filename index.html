@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>streams-editor</title>
+    <title>Data Streams Editor</title>
     <link href="windows.css" rel="stylesheet" type="text/css" />
     <style>
     html {
@@ -32,7 +32,7 @@
       vertical-align: baseline;
     }
     body {
-      font-family: "Open Sans", Helvetica, Arial, sans-serif;
+      font-family: 'Source Sans Pro', 'Open Sans', 'Helvetica Neue', 'Lucida Grande', Arial, sans-serif;
       border-color: #293648;
       margin: 0;
       padding: 0;
@@ -41,6 +41,7 @@
     .topbar {
       background-color: #293648;
       color: #FFF;
+      height: 36px;
       padding: 10px;
     }
     h1 {
@@ -59,14 +60,18 @@
       height: calc(100vh - 30px)
     }
     button {
-      background-color: #F6F7F8;
-      border-color: #293648;
+      color: #F6F7F8;
+      background-color: #505F6D;
+      border: none;
       padding: 7px 9px;
-      box-shadow: 2px 2px 2px #E9EBEC;
       border-radius: 4px;
       outline: none;
-      border-width: 2px;
       cursor: pointer;
+    }
+    button:hover,
+    button:focus {
+      background-color: #003E83;
+      color: #FFF;
     }
     ul {
       list-style: none;
@@ -78,7 +83,24 @@
     #templates {
       margin-top: 40px;
     }
-    button:active {
+    .btn-add {
+      background-color: #F6F7F8;
+      border: 2px solid;
+      border-color: inherit;
+      color: #505F6D;
+      padding: 9px 9px;
+      box-shadow: 2px 2px 2px #E9EBEC;
+      border-radius: 4px;
+      outline: none;
+      border-width: 2px;
+      cursor: pointer;
+    }
+    .btn-add:hover,
+    .btn-add:focus {
+      background-color: rgba(0,127,255,.075);
+      color: #003E83;
+    }
+    .btn-add:active {
       margin-left: 2px;
       margin-top: 2px;
       margin-right: -2px;
