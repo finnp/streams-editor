@@ -3,7 +3,8 @@
 Data Streams Editor aims to make information gathering and archiving on the web user-friendly.
 A simple user interface allows to create runnable network graphs.
 
-## Preview:
+## Preview
+Link: http://www.finnpauls.de/streams-editor/
 
 ![example gif](demo.gif)
 
